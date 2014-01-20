@@ -61,9 +61,7 @@ function email(to, from, subject, text, generated_address){
           if (!success) {
               console.log(message);  
           }
-        });
-
-        
+    });
 };
 
 app.get('/', function(req, res) {
