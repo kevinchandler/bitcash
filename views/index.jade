@@ -1,0 +1,11 @@
+extends layout
+
+block content
+  .form
+    h1 Enter Bitcoin Address
+      form(action='http://10.0.1.187:3001/initiate', method='post')
+        input(type='text', name='address', placeholder='Bitcoin Address', required='required')
+        button.btn.btn-primary.btn-block.btn-large(type='submit') Submit
+        br
+        br
+        a(href='joyceyan.github.io/bitcash') Bitcash home
