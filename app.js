@@ -34,7 +34,7 @@ function email(to, from, subject, text, generated_address){
         var sendgrid = require('sendgrid')(process.env.SENDGRID_USERNAME, process.env.SENDGRID_PASSWORD);
         sendgrid.send({
           to: from,
-          from: 'Payments@BitCash.io',
+          from: 'payments@btcash.herokuapp.com',
           subject: 'BitCash - Action needed',
           html: 'Hello, <br /> We\'ve received your request to send Bitcoins to: <a>' + to + '</a><br /> You will first need to send funds to: <b style="background-color: #eee;">' + generated_address + '</b>\n <br /> <br />Find out more about BitCash <a href="http://joyceyan.github.io/bitcash">here</a><br /><br />--BitCash team, <br /><img src="http://i.imgur.com/mRKYxwz.png"></img>'
         }, function(success, message) {
@@ -44,7 +44,7 @@ function email(to, from, subject, text, generated_address){
         });
         sendgrid.send({
           to: to,
-          from: 'Payments@BitCash.io',
+          from: 'payments@btcash.herokuapp.com',
           subject: subject,
           html: text + '\n <br /> <br />  Find out more about BitCash <a href="http://joyceyan.github.io/bitcash">here</a><br /><br /><img src="http://i.imgur.com/mRKYxwz.png"></img>'
         }, function(success, message) {
@@ -83,7 +83,7 @@ app.post('/initiate', function(req, res) {
 });
 
 app.post('/newTrans', function(req, res) {
-	request('http://10.0.1.187:3000/so/get_new_address', function (error, response, body) {
+	request('http://h.imkev.in:22555/so/get_new_address', function (error, response, body) {
 	    var generated_address = eval("(" + body + ")").data;
 	  	if (!error && response.statusCode == 200) {
 		    tempHash = generated_address + req.body.from + req.body.to;
@@ -108,7 +108,7 @@ app.post('/newTrans', function(req, res) {
 
 function sendPayment(address, amount, parent_Response){
 	//headers
-	request('http://10.0.1.187:3000/so/send_to_address?args='+address+","+amount, function (error, response, body) {
+	request('http://h.imkev.in:22555/so/send_to_address?args='+address+","+amount, function (error, response, body) {
 		var eval_body = eval("(" + body + ")");
 
 		//record some metrics after sending
@@ -129,7 +129,7 @@ app.post('/payout', function(req, res){
 	}
 	
 	//make sure our address is ok
-	request('http://10.0.1.187:3000/so/validate_address?args='+s_address, function (e_1, r_1, b_1) {
+	request('http://h.imkev.in:22555/so/validate_address?args='+s_address, function (e_1, r_1, b_1) {
 		b_1 = eval("(" + b_1 + ")");
 		console.log(b_1);
 		if(typeof b_1.data != "undefined" && b_1.data.isvalid){
@@ -139,7 +139,7 @@ app.post('/payout', function(req, res){
 					if(doc.i_address == "-1"){
 						res.send("You have already withdrawn your bitcoins.");
 					} else {
-						request('http://10.0.1.187:3000/so/list_received_by_address?args=0', function (error, response, body) {
+						request('http://h.imkev.in:22555/so/list_received_by_address?args=0', function (error, response, body) {
 							var payed = false;
 							list_addresses = eval("(" + body + ")");
 							list_addresses = list_addresses.data;
@@ -156,8 +156,10 @@ app.post('/payout', function(req, res){
 									}, function(err, doc, lastErrorObject) {
 									    sendPayment(s_address, amount, res);
 
-									    email('im.kevin@me.com', 'Payments@BitCash.io','Your ' + amount + ' bitcoin have been delivered to ' + s_address,  'Thanks for using BitCash!');
-									    email('its.samweinberg@gmail.com', 'Payments@BitCash.io','You have received ' + amount + ' bitcoin.',  'Thanks for using BitCash!');
+
+									//fix me 	vv
+									    email('im.kevin@me.com', 'Payments@btcash.herokuapp.com','Your ' + amount + ' bitcoin have been delivered to ' + s_address,  'Thanks for using BitCash!');
+									    email('its.samweinberg@gmail.com', 'Payments@btcash.herokuapp.com','You have received ' + amount + ' bitcoin.',  'Thanks for using BitCash!');
 									    console.log('email sent!');
 						  
 									});
