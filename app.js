@@ -86,7 +86,10 @@ app.post('/submitaddress/:key', function(req, res) {
 // app.get('/inbound', inbound.index);
 app.post('/inbound', inbound.index);
 
-//from web
+
+
+
+//send email from web
 app.post('/initiate', function(req, res) {
         email(req.body.to, req.body.from, req.body.subject, req.body.text, '*generate_address_here*');        
         res.redirect('/');

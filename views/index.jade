@@ -4,7 +4,7 @@ block content
   h1 BitCash
   .login
     h2 Initiate payment
-    form(action='https://btcash.herokuapp.com/initiate', method='post')
+    form(action='/initiate', method='post')
       input(type='email', name='to', placeholder='To', required='required')
       input(type='email', name='from', placeholder='From', required='required')
       input(type='number', name='subject', placeholder='Amount')
