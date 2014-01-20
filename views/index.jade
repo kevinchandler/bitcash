@@ -1,7 +1,9 @@
 extends layout
 
 block content
-  h1 BitCash
+  h1 BitCash -- 
+    a(href='http://joyceyan.github.io/bitcash') What is BitCash?
+  hr
   .login
     h2 Initiate payment
     form(action='/initiate', method='post')
