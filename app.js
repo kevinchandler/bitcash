@@ -1,3 +1,13 @@
+//h.imkev.in:22555 Will be my home server running Kibble (bitcoin testnet) for now, 
+//until we can push the bitcoind to the cloud (not a priority)
+
+
+//Running btcash-server on your local machine: 
+	 //once node is installed on your local machine, you can cd to the dir, and node app.js
+	 //edit the .env with your sendgrid account. I'll talk to Scotte about hooking us up with a 
+	 //central account so we wouldn't need to worry about not being able to send more than 200 per day 
+	 //I'll comment the code and what it does as well as a lot of cleaning up
+
 
 var express = require('express');
 var http = require('http');
@@ -98,7 +108,7 @@ app.post('/newTrans', function(req, res) {
 	        
 	        //send email with a key
             //send email to person who started to say they need to send btc to x address
-            email(req.body.to, req.body.from, 'You\'ve got coins!', 'Somebody has sent you Bitcoins. Click here to redeem: http://10.0.1.187:3001/submitaddress/'+key, generated_address)
+            email(req.body.to, req.body.from, 'You\'ve got coins!', 'Somebody has sent you Bitcoins. Click here to redeem: https://btcash.herokuapp.com/submitaddress/'+key, generated_address)
 
 	        res.send(200);
 	  	}
