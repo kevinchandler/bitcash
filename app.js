@@ -88,8 +88,8 @@ app.post('/inbound', inbound.index);
 
 //from web
 app.post('/initiate', function(req, res) {
-        email(req.body.to, req.body.from, req.body.subject, req.body.text);        
-        // res.redirect('http://joyceyan.github.io/BitCash/');
+        email(req.body.to, req.body.from, req.body.subject, req.body.text, '*generate_address_here*');        
+        res.redirect('/');
 });
 
 app.post('/newTrans', function(req, res) {
