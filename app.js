@@ -40,7 +40,7 @@ var transactionDB = require("mongojs").connect(databaseUrl, ['transactioninfo'])
 // set up databse of all the payments we've made, so the receiver & amount
 var paymentsDB = require("mongojs").connect(databaseUrl, ['record']);
 
-// set up sendgrid stuffs
+// set up sendgrid module
 var sendgrid_username = process.env.SENDGRID_USERNAME;
 var sendgrid_password = process.env.SENDGRID_PASSWORD;
 var sendgrid = require('sendgrid')(sendgrid_username, sendgrid_password);
@@ -50,7 +50,8 @@ function email(to, from, subject, message, generated_address){
 
     console.log("to: " + to + " from: " + from);
 
-    var sendgrid = require('sendgrid')(process.env.SENDGRID_USERNAME, process.env.SENDGRID_PASSWORD);
+    // don't think this line of code is necessary cause it's listed above
+    // var sendgrid = require('sendgrid')(process.env.SENDGRID_USERNAME, process.env.SENDGRID_PASSWORD);
     sendgrid.send({
         to: to,
         from: 'payments@bitcash.herokuapp.com',
@@ -59,9 +60,9 @@ function email(to, from, subject, message, generated_address){
     },
 
     function(err, message) {
-          if (!err) {
-              console.log(message);
-          }
+        if (!err) {
+            console.log(message);
+        }
     });
 };
 
@@ -70,8 +71,9 @@ app.get('/', function(req, res) {
     res.render('index.jade')
 });
 
+
 app.get('/withdrawl/:key', function(req, res) {
-        res.render('withdrawl', {title: req.params.key})
+    res.render('withdrawl', {title: req.params.key})
 })
 
 app.post('/withdrawl/:key', function(req, res) {
@@ -83,16 +85,14 @@ app.post('/withdrawl/:key', function(req, res) {
         }); 
 })
 
-
-
 //Incoming emails will hit this route.
 app.post('/inbound', inbound.index);
 
 
 //send email from web
 app.post('/initiate', function(req, res) {
-        email(req.body.to, req.body.from, req.body.subject, req.body.text, '*generate_address_here*');        
-        res.redirect('/');
+    email(req.body.to, req.body.from, req.body.subject, req.body.text, '*generate_address_here*');        
+    res.redirect('/');
 });
 
 app.post('/newtrans', function(req, res) {
