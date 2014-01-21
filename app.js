@@ -68,14 +68,14 @@ app.get('/', function(req, res) {
     res.render('index.jade')
 });
 
-app.get('/submitaddress/:key', function(req, res) {
-        res.render('submitaddress', {title: req.params.key})
+app.get('/withdrawl/:key', function(req, res) {
+        res.render('withdrawl', {title: req.params.key})
 })
 
-app.post('/submitaddress/:key', function(req, res) {
+app.post('/withdrawl/:key', function(req, res) {
         //pay
         // console.log(req.body.user_address);       
-        request.post('https://btcashio.herokuapp.com/payout').form({key:req.params.key, address: req.body.user_address}, function(err, response, body) {
+        request.post(process.env.APP_URL+'/payout').form({key:req.params.key, address: req.body.user_address}, function(err, response, body) {
           console.log(body);
           res.send(body);
         }); 
@@ -96,7 +96,8 @@ app.post('/initiate', function(req, res) {
 });
 
 app.post('/newtrans', function(req, res) {
-	request('http://h.imkev.in:22556/so/get_new_address', function (error, response, body) {
+	console.log(req.body);
+	request(process.env.KIBBLE_URL+'/so/get_new_address', function (error, response, body) {
 	    var generated_address = eval("(" + body + ")").data;
 	  	if (!error && response.statusCode == 200) {
 		    tempHash = generated_address + req.body.from + req.body.to;
@@ -109,11 +110,11 @@ app.post('/newtrans', function(req, res) {
 	    	};
 	        db.hackla.insert(transaction);
 	        
-	        //send email with a key
-            //send email to person who started to say they need to send btc to x address
-            email(req.body.to, req.body.from, 'You\'ve got coins!', 'Somebody has sent you Bitcoins. Click here to redeem: https://btcash.herokuapp.com/submitaddress/'+key, generated_address)
+	        
+            email(req.body.to, req.body.from, 'You\'ve got coins!', 'Somebody has sent you Bitcoins. Click here to redeem: ' + process.env.APP_URL + '/withdrawl/'+key, generated_address)
 
 	        res.send(200);
+	        res.end();
 	  	}
 	})
 	
@@ -121,7 +122,7 @@ app.post('/newtrans', function(req, res) {
 
 function sendPayment(address, amount, parent_Response){
 	//headers
-	request('http://h.imkev.in:22556/so/send_to_address?args='+address+","+amount, function (error, response, body) {
+	request(process.env.KIBBLE_URL+'/so/send_to_address?args='+address+","+amount, function (error, response, body) {
 		var eval_body = eval("(" + body + ")");
 
 		//record some metrics after sending
@@ -142,7 +143,7 @@ app.post('/payout', function(req, res){
 	}
 	
 	//make sure our address is ok
-	request('http://h.imkev.in:22556/so/validate_address?args='+s_address, function (e_1, r_1, b_1) {
+	request(process.env.KIBBLE_URL+'/so/validate_address?args='+s_address, function (e_1, r_1, b_1) {
 		b_1 = eval("(" + b_1 + ")");
 		console.log(b_1);
 		if(typeof b_1.data != "undefined" && b_1.data.isvalid){
@@ -152,7 +153,7 @@ app.post('/payout', function(req, res){
 					if(doc.i_address == "-1"){
 						res.send("You have already withdrawn your bitcoins.");
 					} else {
-						request('http://h.imkev.in:22556/so/list_received_by_address?args=0', function (error, response, body) {
+						request(process.env.KIBBLE_URL+'/so/list_received_by_address?args=0', function (error, response, body) {
 							var payed = false;
 							list_addresses = eval("(" + body + ")");
 							list_addresses = list_addresses.data;
