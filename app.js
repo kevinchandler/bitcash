@@ -114,7 +114,7 @@ app.post('/newtrans', function(req, res) {
             email(recipient_email, 'payments@bitcash.herokuapp.com', recipient_subject, recipient_message, generated_address)
             
 
-            res.redirect('/')
+            res.redirect('/');
 	        res.send(200);
 	        res.end();
 		}
