@@ -40,10 +40,10 @@ var transactionDB = require("mongojs").connect(databaseUrl, ['transactioninfo'])
 // set up databse of all the payments we've made, so the receiver & amount
 var paymentsDB = require("mongojs").connect(databaseUrl, ['record']);
 
-// why is the variable "sendgrid" global?
+// set up sendgrid stuffs
 var sendgrid_username = process.env.SENDGRID_USERNAME;
 var sendgrid_password = process.env.SENDGRID_PASSWORD;
-sendgrid = require('sendgrid')(sendgrid_username, sendgrid_password);
+var sendgrid = require('sendgrid')(sendgrid_username, sendgrid_password);
 
 // email function that takes in various parameters to send a message out using sendgrid's API
 function email(to, from, subject, message, generated_address){
