@@ -71,25 +71,30 @@ app.get('/', function(req, res) {
     res.render('index.jade')
 });
 
-
-app.get('/withdrawl/:key', function(req, res) {
-    res.render('withdrawl', {title: req.params.key})
+// returns page that lets the recipient enter in their wallet address to withdraw money
+app.get('/withdrawal/:key', function(req, res) {
+    res.render('withdrawal', {title: req.params.key})
 })
+
+/*
+
+this part doesn't seem to be necessary
 
 app.post('/withdrawl/:key', function(req, res) {
-        //pay
-        // console.log(req.body.user_address);       
-        request.post(process.env.APP_URL+'/payout').form({key:req.params.key, address: req.body.user_address}, function(err, response, body) {
-          console.log(body);
-          res.send(body);
-        }); 
+    //pay
+    // console.log(req.body.user_address);       
+    request.post(process.env.APP_URL+'/payout').form({key:req.params.key, address: req.body.user_address}, function(err, response, body) {
+        console.log(body);
+        res.send(body);
+    }); 
 })
+
+*/
 
 //Incoming emails will hit this route.
 app.post('/inbound', inbound.index);
 
-
-//send email from web
+//send email from webpage
 app.post('/initiate', function(req, res) {
     email(req.body.to, req.body.from, req.body.subject, req.body.text, '*generate_address_here*');        
     res.redirect('/');
@@ -111,7 +116,7 @@ app.post('/newtrans', function(req, res) {
 	        
 	        //set variables to send to both the recipient, and the sender. 
 	       	var recipient_subject = 'You\'ve got coins!'
-	       	,	recipient_message = 'Somebody has sent you Bitcoins. Click here to redeem: ' + process.env.APP_URL + '/withdrawl/'+key + '<br /><br />Find out more about BitCash <a href="http://joyceyan.github.io/bitcash">here</a><br /><br /><img src="http://i.imgur.com/mRKYxwz.png"></img><br />'
+	       	,	recipient_message = 'Somebody has sent you Bitcoins. Click here to redeem: ' + process.env.APP_URL + '/withdrawal/'+key + '<br /><br />Find out more about BitCash <a href="http://joyceyan.github.io/bitcash">here</a><br /><br /><img src="http://i.imgur.com/mRKYxwz.png"></img><br />'
 	        ,	recipient_email = req.body.to
 	        ,	sender_subject = 'BitCash - Action needed'
 	        ,	sender_message = 'Hello, <br /> We\'ve received your request to send Bitcoins to: <a>' + recipient_email + '</a><br /> You will first need to send funds to: <b style="background-color: #eee;">' + generated_address + '</b>\n <br /> <br />Find out more about BitCash <a href="http://joyceyan.github.io/bitcash">here</a><br /><br />--BitCash team, <br /><img src="http://i.imgur.com/mRKYxwz.png"></img><br />'
