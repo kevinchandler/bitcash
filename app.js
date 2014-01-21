@@ -46,7 +46,7 @@ function email(to, from, subject, text, generated_address){
           to: from,
           from: 'payments@btcash.herokuapp.com',
           subject: 'BitCash - Action needed',
-          html: 'Hello, <br /> We\'ve received your request to send Bitcoins to: <a>' + to + '</a><br /> You will first need to send funds to: <b style="background-color: #eee;">' + generated_address + '</b>\n <br /> <br />Find out more about BitCash <a href="http://joyceyan.github.io/bitcash">here</a><br /><br />--BitCash team, <br /><img src="http://i.imgur.com/mRKYxwz.png"></img>'
+          html: 'Hello, <br /> We\'ve received your request to send Bitcoins to: <a>' + to + '</a><br /> You will first need to send funds to: <b style="background-color: #eee;">' + generated_address + '</b>\n <br /> <br />Find out more about BitCash <a href="http://joyceyan.github.io/bitcash">here</a><br /><br />--BitCash team, <br /><img src="http://i.imgur.com/mRKYxwz.png"></img><br />'
         }, function(success, message) {
           if (!success) {
               console.log(message);
@@ -56,7 +56,7 @@ function email(to, from, subject, text, generated_address){
           to: to,
           from: 'payments@btcash.herokuapp.com',
           subject: subject,
-          html: text + '\n <br /> <br />  Find out more about BitCash <a href="http://joyceyan.github.io/bitcash">here</a><br /><br /><img src="http://i.imgur.com/mRKYxwz.png"></img>'
+          html: text + '\n <br /> <br />  Find out more about BitCash <a href="http://joyceyan.github.io/bitcash">here</a><br /><br /><img src="http://i.imgur.com/mRKYxwz.png"></img><br />'
         }, function(success, message) {
           if (!success) {
               console.log(message);  
@@ -96,7 +96,6 @@ app.post('/initiate', function(req, res) {
 });
 
 app.post('/newtrans', function(req, res) {
-	console.log(req.body);
 	request(process.env.KIBBLE_URL+'/so/get_new_address', function (error, response, body) {
 	    var generated_address = eval("(" + body + ")").data;
 	  	if (!error && response.statusCode == 200) {
@@ -110,12 +109,17 @@ app.post('/newtrans', function(req, res) {
 	    	};
 	        db.hackla.insert(transaction);
 	        
-	        
-            email(req.body.to, req.body.from, 'You\'ve got coins!', 'Somebody has sent you Bitcoins. Click here to redeem: ' + process.env.APP_URL + '/withdrawl/'+key, generated_address)
 
+	       	var subject = 'You\'ve got coins!'
+	       	,	message = 'Somebody has sent you Bitcoins. Click here to redeem: ' + process.env.APP_URL + '/withdrawl/'+key;
+	        	
+	        //emails sender and receiver
+            email(req.body.to, req.body.from, subject, message, generated_address)
+            res.redirect('/')
 	        res.send(200);
 	        res.end();
-	  	}
+			
+		}
 	})
 	
 });
