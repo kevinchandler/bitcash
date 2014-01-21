@@ -1,12 +1,13 @@
-//h.imkev.in:22556 Will be my home server running Kibble (bitcoin testnet) for now, 
-//until we can push the bitcoind to the cloud (not a priority)
+/*
 
+h.imkev.in:22556 Will be my home server running Kibble (bitcoin testnet) for now, 
+until we can push the bitcoind to the cloud (not a priority)
 
-//Running btcash-server on your local machine: 
-//once node is installed on your local machine, you can cd to the dir, and node app.js
-//edit the .env with your sendgrid account. I'll talk to Scotte about hooking us up with a 
-//central account so we wouldn't need to worry about not being able to send more than 200 per day 
-//I'll comment the code and what it does as well as a lot of cleaning up
+Running btcash-server on your local machine: once node is installed on your local machine, you can cd to the dir, and node app.js
+edit the .env with your sendgrid account. I'll talk to Scotte about hooking us up with a central account so we wouldn't need to worry
+about not being able to send more than 200 per day I'll comment the code and what it does as well as a lot of cleaning up
+
+*/
 
 // all requires
 var express = require('express');
@@ -15,45 +16,56 @@ var path = require('path');
 var inbound = require('./routes/inbound.js');
 var app = express();
 var request = require('request');
-// all environments. set local host 3001, where to find views, render views using jade
+
+// all environments, configure a bunch of express stuffs
 app.set('port', process.env.PORT || 3001);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
-
 app.use(express.urlencoded());
 app.use(app.router);
 app.use(express.static(path.join(__dirname, 'public')));
 
+// load environment vars from .env
 var dotenv = require('dotenv');
 dotenv.load();
 
+// refer to current module, in development mode
 var e = module.exports;
 e.ENV = process.env.NODE_ENV || 'development';
 
+// set up mongo database and connect
 var databaseUrl = process.env.DATABASE_URL;
-var db = require("mongojs").connect(databaseUrl, ['hackla']);
-var db2 = require("mongojs").connect(databaseUrl, ['hackla_record']);
+// set up database that keeps track of information about the transaction, including the sender, receiver, and bitcoin addres we generated
+var transactionDB = require("mongojs").connect(databaseUrl, ['transactioninfo']);
+// set up databse of all the payments we've made, so the receiver & amount
+var paymentsDB = require("mongojs").connect(databaseUrl, ['record']);
 
+// why is the variable "sendgrid" global?
 var sendgrid_username = process.env.SENDGRID_USERNAME;
 var sendgrid_password = process.env.SENDGRID_PASSWORD;
 sendgrid = require('sendgrid')(sendgrid_username, sendgrid_password);
 
+// email function that takes in various parameters to send a message out using sendgrid's API
 function email(to, from, subject, message, generated_address){
-        console.log("to: " + to + " from: " + from);
-        
-        var sendgrid = require('sendgrid')(process.env.SENDGRID_USERNAME, process.env.SENDGRID_PASSWORD);
-        sendgrid.send({
-          to: to,
-          from: 'payments@bitcash.herokuapp.com',
-          subject: subject,
-          html: message
-      }, function(err, message) {
+
+    console.log("to: " + to + " from: " + from);
+
+    var sendgrid = require('sendgrid')(process.env.SENDGRID_USERNAME, process.env.SENDGRID_PASSWORD);
+    sendgrid.send({
+        to: to,
+        from: 'payments@bitcash.herokuapp.com',
+        subject: subject,
+        html: message
+    },
+
+    function(err, message) {
           if (!err) {
               console.log(message);
           }
     });
 };
 
+// render the jade file
 app.get('/', function(req, res) {
     res.render('index.jade')
 });
@@ -95,7 +107,7 @@ app.post('/newtrans', function(req, res) {
 	            'receiver' : req.body.to,
 	            'i_address' : generated_address
 	    	};
-	        db.hackla.insert(transaction);
+	        transactionDB.transactioninfo.insert(transaction);
 	        
 	        //set variables to send to both the recipient, and the sender. 
 	       	var recipient_subject = 'You\'ve got coins!'
@@ -127,7 +139,7 @@ function sendPayment(address, amount, parent_Response){
 		var eval_body = eval("(" + body + ")");
 
 		//record some metrics after sending
-		db2.hackla_record.insert({'receiver' : address, 'amount' : amount, 'code' : eval_body.code});
+		paymentsDB.record.insert({'receiver' : address, 'amount' : amount, 'code' : eval_body.code});
 		parent_Response.send('Your funds are on the way!');
 
 		console.log(eval_body);
@@ -149,7 +161,7 @@ app.post('/payout', function(req, res){
 		console.log(b_1);
 		if(typeof b_1.data != "undefined" && b_1.data.isvalid){
 			//try to match the key
-			db.hackla.findOne({key:reqKey}, function(err, doc){
+			transactionDB.transactioninfo.findOne({key:reqKey}, function(err, doc){
 				if(doc != null){
 					if(doc.i_address == "-1"){
 						res.send("You have already withdrawn your bitcoins.");
@@ -164,7 +176,7 @@ app.post('/payout', function(req, res){
 						    		var amount = list_addresses[i].amount;
 
 						    		//disable account after sending
-									db.hackla.findAndModify({
+									transactionDB.transactioninfo.findAndModify({
 									    query: { key: reqKey },
 									    update: { $set: { i_address: "-1" } },
 									    new: true
@@ -202,6 +214,7 @@ app.post('/payout', function(req, res){
 
 });
 
+// create http server and launch it
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
 });
