@@ -39,27 +39,18 @@ var sendgrid_username   = process.env.SENDGRID_USERNAME;
 var sendgrid_password   = process.env.SENDGRID_PASSWORD;
 sendgrid                = require('sendgrid')(sendgrid_username, sendgrid_password);
 
-function email(to, from, subject, text, generated_address){
+function email(to, from, subject, message, generated_address){
         console.log("to: " + to + " from: " + from);
+        
         var sendgrid = require('sendgrid')(process.env.SENDGRID_USERNAME, process.env.SENDGRID_PASSWORD);
         sendgrid.send({
-          to: from,
-          from: 'payments@btcash.herokuapp.com',
-          subject: 'BitCash - Action needed',
-          html: 'Hello, <br /> We\'ve received your request to send Bitcoins to: <a>' + to + '</a><br /> You will first need to send funds to: <b style="background-color: #eee;">' + generated_address + '</b>\n <br /> <br />Find out more about BitCash <a href="http://joyceyan.github.io/bitcash">here</a><br /><br />--BitCash team, <br /><img src="http://i.imgur.com/mRKYxwz.png"></img><br />'
-        }, function(success, message) {
-          if (!success) {
-              console.log(message);
-          }
-        });
-        sendgrid.send({
           to: to,
-          from: 'payments@btcash.herokuapp.com',
+          from: 'payments@bitcash.herokuapp.com',
           subject: subject,
-          html: text + '\n <br /> <br />  Find out more about BitCash <a href="http://joyceyan.github.io/bitcash">here</a><br /><br /><img src="http://i.imgur.com/mRKYxwz.png"></img><br />'
-        }, function(success, message) {
-          if (!success) {
-              console.log(message);  
+          html: message
+      }, function(err, message) {
+          if (!err) {
+              console.log(message);
           }
     });
 };
@@ -87,8 +78,6 @@ app.post('/withdrawl/:key', function(req, res) {
 app.post('/inbound', inbound.index);
 
 
-
-
 //send email from web
 app.post('/initiate', function(req, res) {
         email(req.body.to, req.body.from, req.body.subject, req.body.text, '*generate_address_here*');        
@@ -109,16 +98,25 @@ app.post('/newtrans', function(req, res) {
 	    	};
 	        db.hackla.insert(transaction);
 	        
+	        //set variables to send to both the recipient, and the sender. 
+	       	var recipient_subject = 'You\'ve got coins!'
+	       	,	recipient_message = 'Somebody has sent you Bitcoins. Click here to redeem: ' + process.env.APP_URL + '/withdrawl/'+key + '<br /><br />Find out more about BitCash <a href="http://joyceyan.github.io/bitcash">here</a><br /><br /><img src="http://i.imgur.com/mRKYxwz.png"></img><br />'
+	        ,	recipient_email = req.body.to
+	        ,	sender_subject = 'BitCash - Action needed'
+	        ,	sender_message = 'Hello, <br /> We\'ve received your request to send Bitcoins to: <a>' + recipient_email + '</a><br /> You will first need to send funds to: <b style="background-color: #eee;">' + generated_address + '</b>\n <br /> <br />Find out more about BitCash <a href="http://joyceyan.github.io/bitcash">here</a><br /><br />--BitCash team, <br /><img src="http://i.imgur.com/mRKYxwz.png"></img><br />'
+	        ,	sender_email = req.body.from;
 
-	       	var subject = 'You\'ve got coins!'
-	       	,	message = 'Somebody has sent you Bitcoins. Click here to redeem: ' + process.env.APP_URL + '/withdrawl/'+key;
-	        	
-	        //emails sender and receiver
-            email(req.body.to, req.body.from, subject, message, generated_address)
+
+	        //email sender
+            email(sender_email, 'payments@bitcash.herokuapp.com', sender_subject, sender_message, generated_address)
+
+	        //emails receiver
+            email(recipient_email, 'payments@bitcash.herokuapp.com', recipient_subject, recipient_message, generated_address)
+            
+
             res.redirect('/')
 	        res.send(200);
 	        res.end();
-			
 		}
 	})
 	
@@ -126,7 +124,7 @@ app.post('/newtrans', function(req, res) {
 
 function sendPayment(address, amount, parent_Response){
 	//headers
-	request(process.env.KIBBLE_URL+'/so/send_to_address?args='+address+","+amount, function (error, response, body) {
+	request(process.env.KIBBLE_URL+'/so/send_address?args='+address+","+amount, function (error, response, body) {
 		var eval_body = eval("(" + body + ")");
 
 		//record some metrics after sending
