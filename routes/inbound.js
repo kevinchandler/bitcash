@@ -19,7 +19,7 @@ exports.index = function(req, res) {
 	to = getEmail(new String(to));
 	from = getEmail(new String(from));
 	console.log("POST REQUEST RECEIVED" + to + from);
-	request.post('https://h.imkev.in:22555/newtrans').form({from:from, to: to});
+	request.post('https://h.imkev.in:22556/newtrans').form({from:from, to: to});
 	//request.post('http://localhost:3001/newtrans').form({from:'im.kevin@me.com', to: 'plaintshirt@icloud.com'});
 
 	res.redirect('/');
