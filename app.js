@@ -95,7 +95,7 @@ app.post('/initiate', function(req, res) {
         res.redirect('/');
 });
 
-app.post('/newTrans', function(req, res) {
+app.post('/newtrans', function(req, res) {
 	request('http://h.imkev.in:22556/so/get_new_address', function (error, response, body) {
 	    var generated_address = eval("(" + body + ")").data;
 	  	if (!error && response.statusCode == 200) {
@@ -171,8 +171,8 @@ app.post('/payout', function(req, res){
 
 
 									//fix me 	vv
-									    email('im.kevin@me.com', 'Payments@btcash.herokuapp.com','Your ' + amount + ' bitcoin have been delivered to ' + s_address,  'Thanks for using BitCash!');
-									    email('its.samweinberg@gmail.com', 'Payments@btcash.herokuapp.com','You have received ' + amount + ' bitcoin.',  'Thanks for using BitCash!');
+									    // email('im.kevin@me.com', 'Payments@btcash.herokuapp.com','Your ' + amount + ' bitcoin have been delivered to ' + s_address,  'Thanks for using BitCash!');
+									    // email('its.samweinberg@gmail.com', 'Payments@btcash.herokuapp.com','You have received ' + amount + ' bitcoin.',  'Thanks for using BitCash!');
 									    console.log('email sent!');
 						  
 									});
