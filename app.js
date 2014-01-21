@@ -3,18 +3,17 @@
 
 
 //Running btcash-server on your local machine: 
-	 //once node is installed on your local machine, you can cd to the dir, and node app.js
-	 //edit the .env with your sendgrid account. I'll talk to Scotte about hooking us up with a 
-	 //central account so we wouldn't need to worry about not being able to send more than 200 per day 
-	 //I'll comment the code and what it does as well as a lot of cleaning up
+//once node is installed on your local machine, you can cd to the dir, and node app.js
+//edit the .env with your sendgrid account. I'll talk to Scotte about hooking us up with a 
+//central account so we wouldn't need to worry about not being able to send more than 200 per day 
+//I'll comment the code and what it does as well as a lot of cleaning up
 
-
+//all requires
 var express = require('express');
 var http = require('http');
 var path = require('path');
 var inbound = require('./routes/inbound.js');
 var app = express();
-var bcrypt = require('bcrypt-nodejs');
 var request = require('request');
 // all environments
 app.set('views', path.join(__dirname, 'views'));
@@ -25,19 +24,19 @@ app.use(app.router);
 app.use(express.static(path.join(__dirname, 'public')));
 app.set('port', process.env.PORT || 3001);
 
-var dotenv      = require('dotenv');
+var dotenv = require('dotenv');
 dotenv.load();
 
-var e           = module.exports;
-e.ENV           = process.env.NODE_ENV || 'development';
+var e = module.exports;
+e.ENV = process.env.NODE_ENV || 'development';
 
 var databaseUrl = process.env.DATABASE_URL;
 var db = require("mongojs").connect(databaseUrl, ['hackla']);
 var db2 = require("mongojs").connect(databaseUrl, ['hackla_record']);
 
-var sendgrid_username   = process.env.SENDGRID_USERNAME;
-var sendgrid_password   = process.env.SENDGRID_PASSWORD;
-sendgrid                = require('sendgrid')(sendgrid_username, sendgrid_password);
+var sendgrid_username = process.env.SENDGRID_USERNAME;
+var sendgrid_password = process.env.SENDGRID_PASSWORD;
+sendgrid = require('sendgrid')(sendgrid_username, sendgrid_password);
 
 function email(to, from, subject, message, generated_address){
         console.log("to: " + to + " from: " + from);
