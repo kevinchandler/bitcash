@@ -8,21 +8,21 @@
 //central account so we wouldn't need to worry about not being able to send more than 200 per day 
 //I'll comment the code and what it does as well as a lot of cleaning up
 
-//all requires
+// all requires
 var express = require('express');
 var http = require('http');
 var path = require('path');
 var inbound = require('./routes/inbound.js');
 var app = express();
 var request = require('request');
-// all environments
+// all environments. set local host 3001, where to find views, render views using jade
+app.set('port', process.env.PORT || 3001);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
-app.use(express.bodyParser());
+app.use(express.urlencoded());
 app.use(app.router);
 app.use(express.static(path.join(__dirname, 'public')));
-app.set('port', process.env.PORT || 3001);
 
 var dotenv = require('dotenv');
 dotenv.load();
