@@ -50,8 +50,6 @@ function email(to, from, subject, message, generated_address){
 
     console.log("to: " + to + " from: " + from);
 
-    // don't think this line of code is necessary cause it's listed above
-    // var sendgrid = require('sendgrid')(process.env.SENDGRID_USERNAME, process.env.SENDGRID_PASSWORD);
     sendgrid.send({
         to: to,
         from: 'payments@bitcash.herokuapp.com',
@@ -79,9 +77,7 @@ app.get('/withdrawal/:key', function(req, res) {
 
 
 // lets the user submit their address to withdrawal their funds
-app.post('/withdrawal/:key', function(req, res) {
-    //pay
-    // console.log(req.body.user_address);       
+app.post('/withdrawal/:key', function(req, res) {    
     request.post(process.env.APP_URL+'/payout').form({key:req.params.key, address: req.body.user_address}, function(err, response, body) {
         console.log(body);
         res.send(body);
@@ -90,14 +86,9 @@ app.post('/withdrawal/:key', function(req, res) {
 
 
 
-//Incoming emails will hit this route.
+// Incoming emails will hit this route.
 app.post('/inbound', inbound.index);
 
-//send email from webpage
-app.post('/initiate', function(req, res) {
-    email(req.body.to, req.body.from, req.body.subject, req.body.text, '*generate_address_here*');        
-    res.redirect('/');
-});
 
 app.post('/newtrans', function(req, res) {
 	request(process.env.KIBBLE_URL+'/so/get_new_address', function (error, response, body) {
@@ -188,7 +179,7 @@ app.post('/payout', function(req, res){
 									    sendPayment(s_address, amount, res);
 
 
-									//fix me 	vv
+										//sends an email to both the recipient and sender letting them konw transaction has completed.
 									    // email('im.kevin@me.com', 'Payments@btcash.herokuapp.com','Your ' + amount + ' bitcoin have been delivered to ' + s_address,  'Thanks for using BitCash!');
 									    // email('its.samweinberg@gmail.com', 'Payments@btcash.herokuapp.com','You have received ' + amount + ' bitcoin.',  'Thanks for using BitCash!');
 									    console.log('email sent!');
