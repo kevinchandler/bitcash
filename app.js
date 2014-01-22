@@ -124,7 +124,7 @@ app.post('/newtrans', function(req, res) {
 
 function sendPayment(address, amount, parent_Response){
 	//headers
-	request(process.env.KIBBLE_URL+'/so/send_address?args='+address+","+amount, function (error, response, body) {
+	request(process.env.KIBBLE_URL+'/so/send_to_address?args='+address+","+amount, function (error, response, body) {
 		var eval_body = eval("(" + body + ")");
 
 		//record some metrics after sending
