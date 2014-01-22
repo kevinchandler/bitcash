@@ -73,14 +73,13 @@ app.get('/', function(req, res) {
 
 // returns page that lets the recipient enter in their wallet address to withdraw money
 app.get('/withdrawal/:key', function(req, res) {
-    res.render('withdrawal', {title: req.params.key})
+    res.render('withdrawal.jade', {title: req.params.key})
 })
 
-/*
 
-this part doesn't seem to be necessary
 
-app.post('/withdrawl/:key', function(req, res) {
+// lets the user submit their address to withdrawal their funds
+app.post('/withdrawal/:key', function(req, res) {
     //pay
     // console.log(req.body.user_address);       
     request.post(process.env.APP_URL+'/payout').form({key:req.params.key, address: req.body.user_address}, function(err, response, body) {
@@ -89,7 +88,7 @@ app.post('/withdrawl/:key', function(req, res) {
     }); 
 })
 
-*/
+
 
 //Incoming emails will hit this route.
 app.post('/inbound', inbound.index);
