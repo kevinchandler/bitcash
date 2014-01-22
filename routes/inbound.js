@@ -1,5 +1,6 @@
 var request = require('request');
 
+// e.g. replace the <sample@email.com> with sample@email.com
 function getEmail(msg){
 	var pattern = /<.*>/;
 	var regex = msg.match(pattern);
