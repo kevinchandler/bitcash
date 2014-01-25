@@ -34,8 +34,36 @@
 
 <!-- title & caption -->
 <h1><b><i class="fa fa-bitcoin"></i>itCash</b></h1>
-<aside>Send bitcoins through email</aside>
+<aside>Send bitcoins through email
+<br />
+<!-- Button trigger modal -->
+<button class="btn btn-success btn-lg" data-toggle="modal" data-target="#myModal">
+  Try it out
+</button>
 
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel"><i class="fa fa-bitcoin"></i>itCash</b></h4>
+      </div>
+      <div class="modal-body">
+      <form action='/newtrans' method='post'>
+		<input type='email', name='to', placeholder='To*', required='required'>
+        <input type='email', name='from', placeholder='From*', required='required'>
+        <button type='submit'>Submit</button>
+      </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+</aside>
 <br>
 
 <div class="row"> <!-- row of emails -->
@@ -117,4 +145,6 @@ We temporarily hold onto your bitcoins so that we can simplify the transaction p
 
 </div> <!-- close row of features -->
 
+<script src='//code.jquery.com/jquery-1.10.2.min.js'></script>
+<script src='//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js'></script>
 </body>
