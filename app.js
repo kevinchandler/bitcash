@@ -66,7 +66,7 @@ function email(to, from, subject, message, generated_address){
 
 // render the jade file
 app.get('/', function(req, res) {
-    res.render('index.jade')
+    res.render('howitworks')
 });
 
 // returns page that lets the recipient enter in their wallet address to withdraw money

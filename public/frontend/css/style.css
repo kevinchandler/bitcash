@@ -1,0 +1,84 @@
+body h1 {
+	text-align:center;
+	font-size:5em;
+	color:#27AE60;
+	font-family: 'Alegreya', serif;
+}
+
+body h2 {
+	font-size:50px;
+	color:#27AE60;
+}
+
+aside {
+	text-align:center;
+    font-family: 'Roboto Condensed', sans-serif;
+    font-weight: normal;
+    font-size: 1.2em;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+strong{
+	color:#27AE60;
+}
+
+body h4 {
+	font-weight:bold;
+}
+
+#code {
+	font-family: 'Source Code Pro', serif;
+}
+
+/* style sample emails */
+
+.sampleemail {
+	height:400px;
+
+}
+
+#email {
+	padding:1px;
+	background-color: #fbfbfb;
+	height:300px;
+}
+
+#email tr {
+	list-style-type: none;
+	border-bottom: 1px solid #34495E;
+	text-align:left;
+}
+
+#email tr td {
+	padding-left:5px;
+	padding-top:6px;
+	padding-bottom:none;
+}
+
+#email tr:first-child{
+	margin-top:15px;
+	text-align:center;
+}
+
+#email tr:last-child{
+	border-bottom:none;
+}
+
+/* add green to cc box */
+
+#ccbox {
+	background-color:#47CE80;
+}
+
+/* bootstrap columns */
+
+.col-sm-12 {
+	background-color:#fbfbfb;
+	text-align:center;	
+}
+
+.col-sm-4 {
+	background-color:#fbfbfb;
+	padding-bottom:10px;
+}

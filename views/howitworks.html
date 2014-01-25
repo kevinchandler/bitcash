@@ -1,0 +1,120 @@
+<head>
+<title>BitCash - Send bitcoins through email</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- link sheets & fonts -->
+<link href="./frontend/css/fontawesome.css" rel="stylesheet" type="text/css"/>
+<link href="./frontend/css/style.css" rel="stylesheet" type="text/css">
+<link href="./frontend/css/bootstrap.css" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=Roboto|Roboto+Condensed|Alegreya:700" rel="stylesheet" type="text/css" />
+<link href='http://fonts.googleapis.com/css?family=Source+Code+Pro' rel='stylesheet' type='text/css'>
+<!-- favicon -->
+<link rel="shortcut icon" href="./img/bitcoinfavicon.ico" type="image/x-icon">
+<link rel="icon" href="./img/bitcoinfavicon.ico" type="image/x-icon">
+
+<!-- some styling -->
+<style type="text/css">
+	body {
+	background-color:#ECF0F1;
+	font-family: 'Roboto', sans-serif;
+    font-size: 15px;
+    line-height: 23px;
+    margin: 0 0 23px 0;
+	}
+
+	h2, h3, h4, h5, h6 {
+	font-family: 'Roboto', sans-serif;
+	}
+</style>
+
+</head>
+
+<body>
+
+<div class="container"> <!-- starts container that everything is stored in -->
+
+<!-- title & caption -->
+<h1><b><i class="fa fa-bitcoin"></i>itCash</b></h1>
+<aside>Send bitcoins through email</aside>
+
+<br>
+
+<div class="row"> <!-- row of emails -->
+
+<div class="col-md-4 sampleemail">
+	<table id="email">
+		<tr><td><h4><strong>Step 1</strong>: Email Your Friend and CC Us</h4></td></tr>
+		<tr><td><p><b>From:</b> Alice (alice@gmail.com)</p></td></tr>
+		<tr><td><p><b>To:</b> Bob (bob@gmail.com)</p></td></tr>
+		<tr><td id="ccbox"><p><b>Cc:</b> BitCash (send@bitcash.bymail.in)</p></td></tr>
+		<tr><td><p><b>Subject:</b> I owe you $25</p></td></tr>
+		<tr><td><p>Hey Bob,<br><br>This is for the lunch we had earlier today. I had a great time!<br><br>- Alice<br><br></p></td></tr>
+	</table>
+</div>
+
+<div class="col-md-4 sampleemail">
+	<table id="email">
+		<tr><td><h4><strong>Step 2</strong>: We Email You</h4></td></tr>
+		<tr><td><p><b>From:</b> BitCash (send@bitcash.bymail.in)</p></td></tr>
+		<tr><td><p><b>To:</b> Alice (alice@gmail.com)</p></td></tr>
+		<tr><td><p><b>Subject:</b> Re: I owe you $25</p></td></tr>
+		<tr><td><p>Hi Alice,<br><br>
+			You're sending Bob (bob@gmail.com) some bitcoins. Please send the money to this temporary bitcoin address:</p><p id="code">1N9ucMnE11iSi8F8ttncVJiTyngiU1jCYv</p>
+			Thanks,<br>
+			BitCash</p></td></tr>
+	</table>
+</div>
+
+<div class="col-md-4 sampleemail">
+	<table id="email">
+		<tr><td><h4><strong>Step 3</strong>: We Email Your Friend</h4></td></tr>
+		<tr><td><p><b>From:</b> BitCash (send@bitcash.bymail.in)</p></td></tr>
+		<tr><td><p><b>To:</b> Bob (bob@gmail.com)</p></td></tr>
+		<tr><td><p><b>Subject:</b> Re: I owe you $25</p></td></tr>
+		<tr><td><p>Hi Bob,<br><br>
+		Alice (alice@gmail.com) is trying to send you some bitcoins. To accept, please respond to this email with your Bitcoin address and we'll take care of the rest.
+		<br><br>
+		Thanks,<br>
+		BitCash</p></td></tr>
+	</table>
+</div>
+
+</div> <!-- close row of emails -->
+
+<br>
+
+<div class="row" id="whitebg"> <!-- row of money flow -->
+<div class="col-sm-12">
+
+<h3>Basically, here's how your money travels:</h3>
+
+<h2>You <i class="fa fa-long-arrow-right"></i> BitCash <i class="fa fa-long-arrow-right"></i> Recipient</h2>
+
+<p>
+We temporarily hold onto your bitcoins so that we can simplify the transaction process for you. This allows you the following conveniences:
+</p>
+
+</div>
+</div> <!-- close row of money flow -->
+
+<div class="row" id="whitebg"> <!-- row of features -->
+
+<div class="col-sm-4">
+	<h3><i class="fa fa-check"></i> Quick and Simple</h3>
+	<p>With just an email and bitcoin address, sending money is as simple as writing a quick email. <strong>Just make sure you cc us!</strong></p>
+</div>
+
+<div class="col-sm-4">
+	<h3><i class="fa fa-ban fa-fw"></i>
+		No Sign Up Necessary</h3>
+	<p>That's right. You don't have to create another dang account. More importantly, your recipient doesn't have to create an account either.</p>
+</div>
+
+<div class="col-sm-4">
+	<h3>
+		<i class="fa fa-exchange"></i>  Instant Transactions</h3>
+	<p>Unlike regular cash, bitcoin transfers are near-instant and don't require 1-2 business days to process.</p>
+</div>
+
+</div> <!-- close row of features -->
+
+</body>
