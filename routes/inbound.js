@@ -21,5 +21,5 @@ exports.index = function(req, res) {
 	from = getEmail(new String(from));
 	console.log("POST REQUEST RECEIVED" + to + from);
 	request.post(process.env.APP_URL+'/newtrans').form({from:from, to: to});
-	res.redirect('/');
+	res.end();
 }
