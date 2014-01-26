@@ -3,7 +3,7 @@ bitcash
 
 Send Bitcoins through email!
 
-https://bitcash.herokuapp.com
+http://107.170.246.176:3001/
 
 
 You'll need a .env file with the following info:
