@@ -18,7 +18,7 @@ var app = express();
 var request = require('request');
 
 // all environments, configure a bunch of express stuffs
-app.set('port', process.env.PORT || 80);
+app.set('port', process.env.PORT || 3001);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 app.use(express.urlencoded());
@@ -53,7 +53,7 @@ function email(to, from, subject, message, generated_address){
 
     sendgrid.send({
         to: to,
-        from: 'payments@bitcash.herokuapp.com',
+        from: 'payments@coinloom.com',
         subject: subject,
         html: message
     },
@@ -108,17 +108,17 @@ app.post('/newtrans', function(req, res) {
 	        //set variables to send to both the recipient, and the sender. 
 	       	var recipient_subject = 'You\'ve got coins!'
 	       	,	recipient_message = 'Somebody has sent you Bitcoins. Click here to redeem: ' + process.env.APP_URL + '/withdrawal/'+key + '<br /><br />Find out more about BitCash <a href="'+process.env.APP_URL+'">here</a><br /><br /><img src="http://i.imgur.com/mRKYxwz.png"></img><br />'	
-		,	recipient_email = req.body.to
+			,	recipient_email = req.body.to
 	        ,	sender_subject = 'BitCash - Action needed'
 	        ,	sender_message = 'Hello, <br /> We\'ve received your request to send Bitcoins to: <a>' + recipient_email + '</a><br /> You will first need to send funds to: <b style="background-color: #eee;">' + generated_address + '</b>\n <br /> <br />Find out more about BitCash <a href="'+process.env.APP_URL+'">here</a><br /><br />--BitCash team, <br /><img src="http://i.imgur.com/mRKYxwz.png"></img><br />'
 	        ,	sender_email = req.body.from;
 
 
 	        //email sender
-            email(sender_email, 'payments@bitcash.herokuapp.com', sender_subject, sender_message, generated_address)
+            email(sender_email, process.env.APP_EMAIL, sender_subject, sender_message, generated_address)
 
 	        //emails receiver
-            email(recipient_email, 'payments@bitcash.herokuapp.com', recipient_subject, recipient_message, generated_address)
+            email(recipient_email, process.env.APP_EMAIL, recipient_subject, recipient_message, generated_address)
             
 
             res.redirect('/');
@@ -143,7 +143,6 @@ function sendPayment(address, amount, parent_Response){
 }
 
 app.post('/payout', function(req, res){
-	console.log(req.body);
 	var reqKey = req.body.key;
 	var s_address = req.body.address; 
     console.log("reqKey: " + reqKey + " address: " + s_address);
@@ -158,10 +157,12 @@ app.post('/payout', function(req, res){
 		if(typeof b_1.data != "undefined" && b_1.data.isvalid){
 			//try to match the key
 			transactionDB.transactioninfo.findOne({key:reqKey}, function(err, doc){
+				console.dir('doc is: ' + Object.keys(doc));
+				console.log('sender: ' + doc.sender + '\n receiver: ' + doc.receiver);
 				if(doc != null){
 					if(doc.i_address == "-1"){
 						res.send("You have already withdrawn your bitcoins.");
-					} else {
+					} else {					
 						request(process.env.KIBBLE_URL+'/so/list_received_by_address?args=0', function (error, response, body) {
 							var payed = false;
 							list_addresses = eval("(" + body + ")");
@@ -179,11 +180,11 @@ app.post('/payout', function(req, res){
 									}, function(err, doc, lastErrorObject) {
 									    sendPayment(s_address, amount, res);
 
-
 										//sends an email to both the recipient and sender letting them konw transaction has completed.
-									    // email('im.kevin@me.com', 'Payments@btcash.herokuapp.com','Your ' + amount + ' bitcoin have been delivered to ' + s_address,  'Thanks for using BitCash!');
-									    // email('its.samweinberg@gmail.com', 'Payments@btcash.herokuapp.com','You have received ' + amount + ' bitcoin.',  'Thanks for using BitCash!');
-									    console.log('email sent!');
+									    email(doc.sender, process.env.APP_EMAIL,'Your ' + amount + ' bitcoin have been delivered to ' + doc.receiver,  'Thanks for using ' + process.env.APP_NAME + '!\n');
+									    email(doc.receiver, process.env.APP_EMAIL, 'You have withdrawn ' + amount + ' bitcoin. We have emailed ' + doc.sender + ' letting them know.\n   Thanks for using ' + process.env.APP_NAME + '!\n');
+									    
+
 						  
 									});
 						    		payed = true;
