@@ -18,10 +18,11 @@ var app = express();
 var request = require('request');
 
 // all environments, configure a bunch of express stuffs
-app.set('port', process.env.PORT || 3001);
+app.set('port', process.env.PORT || 80);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 app.use(express.urlencoded());
+app.use(express.bodyParser());
 app.use(app.router);
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -106,10 +107,10 @@ app.post('/newtrans', function(req, res) {
 	        
 	        //set variables to send to both the recipient, and the sender. 
 	       	var recipient_subject = 'You\'ve got coins!'
-	       	,	recipient_message = 'Somebody has sent you Bitcoins. Click here to redeem: ' + process.env.APP_URL + '/withdrawal/'+key + '<br /><br />Find out more about BitCash <a href="http://joyceyan.github.io/bitcash">here</a><br /><br /><img src="http://i.imgur.com/mRKYxwz.png"></img><br />'
-	        ,	recipient_email = req.body.to
+	       	,	recipient_message = 'Somebody has sent you Bitcoins. Click here to redeem: ' + process.env.APP_URL + '/withdrawal/'+key + '<br /><br />Find out more about BitCash <a href="'+process.env.APP_URL+'">here</a><br /><br /><img src="http://i.imgur.com/mRKYxwz.png"></img><br />'	
+		,	recipient_email = req.body.to
 	        ,	sender_subject = 'BitCash - Action needed'
-	        ,	sender_message = 'Hello, <br /> We\'ve received your request to send Bitcoins to: <a>' + recipient_email + '</a><br /> You will first need to send funds to: <b style="background-color: #eee;">' + generated_address + '</b>\n <br /> <br />Find out more about BitCash <a href="http://joyceyan.github.io/bitcash">here</a><br /><br />--BitCash team, <br /><img src="http://i.imgur.com/mRKYxwz.png"></img><br />'
+	        ,	sender_message = 'Hello, <br /> We\'ve received your request to send Bitcoins to: <a>' + recipient_email + '</a><br /> You will first need to send funds to: <b style="background-color: #eee;">' + generated_address + '</b>\n <br /> <br />Find out more about BitCash <a href="'+process.env.APP_URL+'">here</a><br /><br />--BitCash team, <br /><img src="http://i.imgur.com/mRKYxwz.png"></img><br />'
 	        ,	sender_email = req.body.from;
 
 
