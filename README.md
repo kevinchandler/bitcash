@@ -3,7 +3,9 @@ bitcash
 
 Send Bitcoins through email!
 
-http://107.170.246.176:3001/
+http://coinloom.com
+
+CC: send@coinloom.bymail.in
 
 
 You'll need a .env file with the following info:
