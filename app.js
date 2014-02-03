@@ -107,9 +107,9 @@ app.post('/newtrans', function(req, res) {
 	        
 	        //set variables to send to both the recipient, and the sender. 
 	       	var recipient_subject = 'You\'ve got coins!'
-	       	,	recipient_message = 'Somebody has sent you Bitcoins. Click here to redeem: ' + process.env.APP_URL + '/withdrawal/'+key + '<br /><br />Find out more about BitCash <a href="'+process.env.APP_URL+'">here</a><br /><br /><img src="http://i.imgur.com/mRKYxwz.png"></img><br />'	
+	       	,	recipient_message = req.body.from + ' has sent you Bitcoins. Click here to redeem: ' + process.env.APP_URL + '/withdrawal/'+key + '<br /><br />Find out more about BitCash <a href="'+process.env.APP_URL+'">here</a><br /><br /><img src="http://i.imgur.com/mRKYxwz.png"></img><br />'	
 			,	recipient_email = req.body.to
-	        ,	sender_subject = 'BitCash - Action needed'
+	        ,	sender_subject = process.env.APP_NAME + ' - Action needed.'
 	        ,	sender_message = 'Hello, <br /> We\'ve received your request to send Bitcoins to: <a>' + recipient_email + '</a><br /> You will first need to send funds to: <b style="background-color: #eee;">' + generated_address + '</b>\n <br /> <br />Find out more about BitCash <a href="'+process.env.APP_URL+'">here</a><br /><br />--BitCash team, <br /><img src="http://i.imgur.com/mRKYxwz.png"></img><br />'
 	        ,	sender_email = req.body.from;
 
