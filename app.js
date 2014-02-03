@@ -49,16 +49,19 @@ var sendgrid = require('sendgrid')(sendgrid_username, sendgrid_password);
 // email function that takes in various parameters to send a message out using sendgrid's API
 function email(to, from, subject, message, generated_address){
 
-    console.log("to: " + to + " from: " + from);
+    console.log("to: " + to + " from: " + process.env.APP_EMAIL);
 
     sendgrid.send({
         to: to,
-        from: 'payments@coinloom.com',
+        from: process.env.APP_EMAIL,
         subject: subject,
         html: message
     },
 
     function(err, message) {
+    	if (err) {
+    		console.log(err);
+    	}
         if (!err) {
             console.log(message);
         }
@@ -70,6 +73,9 @@ app.get('/', function(req, res) {
     res.render('howitworks')
 });
 
+app.post('/email', function(req, res) { 
+	email(req.body.to, 'null', req.body.subject, req.body.message);
+})
 // returns page that lets the recipient enter in their wallet address to withdraw money
 app.get('/withdrawal/:key', function(req, res) {
     res.render('withdrawal.jade', {title: req.params.key})

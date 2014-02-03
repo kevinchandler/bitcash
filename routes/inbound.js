@@ -1,4 +1,5 @@
 var request = require('request');
+var sendgrid = require('sendgrid')(process.env.SENDGRID_USERNAME, process.env.SENDGRID_PASSWORD);
 
 function getEmail(msg){
 	var pattern = /<.*>/;
@@ -13,11 +14,20 @@ function getEmail(msg){
 }
 
 exports.index = function(req, res) {
-	var to = req.body.to
-	,   from = req.body.from;
-	to = getEmail(new String(to));
-	from = getEmail(new String(from));
-	console.log("Inbound email: " + to + ' ' + from);
-	request.post(process.env.APP_URL+'/newtrans').form({from:from, to: to});
-	res.end();
+	
+		var to = getEmail(new String(req.body.to))
+		,	from = getEmail(new String(req.body.from))
+		,	cc = getEmail(new String(req.body.cc));
+
+		console.log("\n Inbound email: \n To: " + to + '\n From: ' + from + '\n CC: ' + cc + '\n');
+
+
+		// if email is sent TO the app, and someone is cc'd, it will set var cc to var to.
+		if (to == process.env.APP_PARSE_EMAIL) {
+			request.post(process.env.APP_URL+'/email').form({to: from, message: 'You are using ' + process.env.APP_NAME + ' wrong! Please cc: ' + process.env.APP_PARSE_EMAIL + '<br /><br />', subject: process.env.APP_NAME + ': - Action Needed' });
+		}
+		else {
+			request.post(process.env.APP_URL+'/newtrans').form({from:from, to: to});
+		}
+		res.end();
 }
