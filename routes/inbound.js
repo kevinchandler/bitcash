@@ -22,7 +22,7 @@ exports.index = function(req, res) {
 		console.log("\n Inbound email: \n To: " + to + '\n From: ' + from + '\n CC: ' + cc + '\n');
 
 
-		// if email is sent TO the app, and someone is cc'd, it will set var cc to var to.
+		// if email is sent TO the app, will email sender letting them know how to use coinloom
 		if (to == process.env.APP_PARSE_EMAIL) {
 			request.post(process.env.APP_URL+'/email').form({to: from, message: 'You are using ' + process.env.APP_NAME + ' wrong! Please cc: ' + process.env.APP_PARSE_EMAIL + '<br /><br />', subject: process.env.APP_NAME + ': - Action Needed' });
 		}
