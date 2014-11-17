@@ -3,10 +3,9 @@ bitcash
 
 Send Bitcoins through email!
 
-http://coinloom.com
+Created at Codeday 2014
 
-CC: send@coinloom.bymail.in
-
+Shout out to [Kibble](https://github.com/motdotla/kibble)
 
 You'll need a .env file with the following info:
 ```bash
@@ -20,3 +19,4 @@ APP_EMAIL = ''
 DATABASE_URL = ''
 ```
 
+Then just send an email to whomever you're sending Bitcoin to, and CC: APP_EMAIL
